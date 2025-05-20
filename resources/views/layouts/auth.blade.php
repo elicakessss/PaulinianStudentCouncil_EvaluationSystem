@@ -7,6 +7,9 @@
 
     <title>{{ config('app.name', 'PSG Evaluation System') }}</title>
 
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -16,14 +19,17 @@
     <style>
         :root {
             --primary-color: #0d532d;
-            --secondary-color: #3e8e58;
-            --accent-color: #dce9d5;
-            --background-color: #f5f5f5;
+            --primary-dark: #084023;
+            --primary-light: #156e3d;
+            --secondary-color: #5F8D4E;
+            --accent-color: #A4BE7B;
+            --background-color: #f8f9fa;
         }
 
         body {
             background-color: var(--background-color);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
             height: 100vh;
             display: flex;
             align-items: center;
@@ -37,7 +43,7 @@
             width: 100%;
             max-width: 900px;
             background-color: #fff;
-            border-radius: 10px;
+            border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             position: relative;
@@ -57,8 +63,9 @@
 
         .login-brand {
             flex: 1;
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color), var(--primary-light));
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             position: relative;
@@ -105,16 +112,27 @@
         }
 
         .logo-img {
-            width: 180px;
-            height: 180px;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 15px;
+        }
+
+        .system-name {
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            text-align: center;
+            margin-top: 5px;
         }
 
         .form-title {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 600;
             color: #333;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            letter-spacing: 0.2px;
         }
 
         .form-group {
@@ -123,53 +141,61 @@
 
         .form-label {
             font-weight: 500;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: block;
+            font-size: 13px;
         }
 
         .form-control {
-            height: 50px;
+            height: 45px;
             background-color: #f9f9f9;
             border: 1px solid #eee;
             border-radius: 5px;
-            padding: 10px 15px;
-            font-size: 14px;
+            padding: 8px 15px;
+            font-size: 13px;
+            font-family: 'Poppins', sans-serif;
         }
 
         .form-control:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.2rem rgba(62, 142, 88, 0.25);
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 0.2rem rgba(21, 110, 61, 0.25);
         }
 
         .btn-submit {
-            height: 50px;
-            background-color: var(--primary-color);
+            height: 45px;
+            background: linear-gradient(to right, var(--primary-dark), var(--primary-color));
             border: none;
             border-radius: 5px;
             color: white;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
             width: 100%;
             margin-top: 10px;
             transition: all 0.3s;
+            font-size: 13px;
+            text-transform: uppercase;
         }
 
         .btn-submit:hover {
-            background-color: #094525;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
         }
 
         .forgot-password {
             display: block;
             text-align: center;
-            color: var(--secondary-color);
+            color: var(--primary-color);
             margin: 15px 0;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .forgot-password:hover {
-            color: var(--primary-color);
+            color: var(--primary-dark);
+        }
+
+        .alert {
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
         }
 
         @media (max-width: 768px) {
@@ -234,7 +260,8 @@
                 </div>
 
                 <div class="logo-container">
-                    <img src="{{ asset('images/psg-logo.png') }}" class="logo-img" alt="PSG Logo" onerror="this.src='https://via.placeholder.com/180?text=PSG+Logo'">
+                    <img src="{{ asset('images/psg-logo.png') }}" class="logo-img" alt="PSG Logo" onerror="this.src='https://via.placeholder.com/120?text=PSG+Logo'">
+                    <h5 class="system-name">PSG Evaluation System</h5>
                 </div>
             </div>
         </div>
