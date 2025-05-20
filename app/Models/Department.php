@@ -6,11 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Department extends Model
 {
-    public function advisers() {
+    protected $fillable = ['name', 'abbreviation'];
+
+    public function advisers()
+    {
         return $this->hasMany(Adviser::class);
     }
 
-    public function councils() {
+    public function councils()
+    {
         return $this->hasMany(Council::class);
     }
 }

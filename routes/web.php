@@ -3,69 +3,98 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\OrganizationController;
-use App\Http\Controllers\Admin\UserManagementController;
-use App\Http\Controllers\Admin\EvaluationReportController;
-use App\Http\Controllers\Admin\SystemLogsController;
-use App\Http\Controllers\Admin\AccountController;
 
-// Authentication routes
-Route::get('/', function () {
-    return redirect()->route('login');
-})->name('home');
+// Admin Controllers
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\OrganizationController as AdminOrganizationController;
+use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\AccountController as AdminAccountController;
+
+// Adviser Controllers
+use App\Http\Controllers\Adviser\DashboardController as AdviserDashboardController;
+use App\Http\Controllers\Adviser\OrganizationController as AdviserOrganizationController;
+use App\Http\Controllers\Adviser\StudentController as AdviserStudentController;
+use App\Http\Controllers\Adviser\EvaluationController as AdviserEvaluationController;
+use App\Http\Controllers\Adviser\ReportsController as AdviserReportsController;
+use App\Http\Controllers\Adviser\AccountController as AdviserAccountController;
+
+// Student Controllers
+use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
+use App\Http\Controllers\Student\OrganizationController as StudentOrganizationController;
+use App\Http\Controllers\Student\EvaluationController as StudentEvaluationController;
+
+/*
+|--------------------------------------------------------------------------
+| Authentication Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/', fn() => redirect()->route('login'))->name('home');
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->name('login.submit'); 
+Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
-// Admin routes
+/*
+|--------------------------------------------------------------------------
+| Admin Routes
+|--------------------------------------------------------------------------
+*/
 Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-    // My Organization
+    // Organization Management
     Route::prefix('organization')->group(function () {
-        // Organization (with functionality)
-        Route::get('/', [OrganizationController::class, 'index'])->name('admin.organization');
-        Route::get('/create', [OrganizationController::class, 'create'])->name('admin.organization.create');
-        Route::post('/', [OrganizationController::class, 'store'])->name('admin.organization.store');
-        Route::get('/{id}', [OrganizationController::class, 'show'])->name('admin.organization.show');
+        Route::get('/', [AdminOrganizationController::class, 'index'])->name('admin.organization');
+        Route::get('/create', [AdminOrganizationController::class, 'create'])->name('admin.organization.create');
+        Route::post('/', [AdminOrganizationController::class, 'store'])->name('admin.organization.store');
+        Route::get('/{id}', [AdminOrganizationController::class, 'show'])->name('admin.organization.show');
 
-        // Evaluation
-        Route::get('/evaluation', function () {
-            return view('admin.organization.evaluation');
-        })->name('admin.organization.evaluation');
+        Route::get('/evaluation', fn() => view('admin.organization.evaluation'))->name('admin.organization.evaluation');
     });
 
     // System Management
     Route::prefix('system')->group(function () {
-        // User Management (with functionality)
-        Route::get('/users', [UserManagementController::class, 'index'])->name('admin.users.index');
-        Route::get('/users/create/{role?}', [UserManagementController::class, 'create'])->name('admin.users.create');
-        Route::post('/users/{role}', [UserManagementController::class, 'store'])->name('admin.users.store');
-        Route::get('/users/{role}/{id}', [UserManagementController::class, 'show'])->name('admin.users.show');
-        Route::get('/users/{role}/{id}/edit', [UserManagementController::class, 'edit'])->name('admin.users.edit');
-        Route::put('/users/{role}/{id}', [UserManagementController::class, 'update'])->name('admin.users.update');
-        Route::delete('/users/{role}/{id}', [UserManagementController::class, 'destroy'])->name('admin.users.destroy');
+        // User Management
+        Route::prefix('admin/users')->group(function () {
+            Route::get('/', [UserManagementController::class, 'index'])->name('admin.users.index');
+            Route::get('/create', [UserManagementController::class, 'create'])->name('admin.users.create');
+            Route::post('/', [UserManagementController::class, 'store'])->name('admin.users.store');
+            Route::get('/{id}/edit', [UserManagementController::class, 'edit'])->name('admin.users.edit');
+            Route::put('/{id}', [UserManagementController::class, 'update'])->name('admin.users.update');
+            Route::delete('/{id}', [UserManagementController::class, 'destroy'])->name('admin.users.destroy');
+        });
 
-        // Organization Management
-        Route::get('/organizations', function() {
-            return view('admin.system.organizations.index');
-        })->name('admin.system.organizations.index');
-
-        // Evaluation Reports
-        Route::get('/reports', function() {
-            return view('admin.system.reports.index');
-        })->name('admin.system.reports');
-
-        // System Logs
-        Route::get('/logs', function() {
-            return view('admin.system.logs.index');
-        })->name('admin.system.logs');
+        // Other Pages
+        Route::get('/organizations', fn() => view('admin.system.organizations.index'))->name('admin.system.organizations.index');
+        Route::get('/reports', fn() => view('admin.system.reports.index'))->name('admin.system.reports');
+        Route::get('/logs', fn() => view('admin.system.logs.index'))->name('admin.system.logs');
     });
 
     // Account
-    Route::get('/account', function() {
-        return view('admin.account.index');
-    })->name('admin.account');
+    Route::get('/account', fn() => view('admin.account.index'))->name('admin.account');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Adviser Routes
+|--------------------------------------------------------------------------
+*/
+Route::prefix('adviser')->middleware('auth:adviser')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\Adviser\DashboardController::class, 'index'])->name('adviser.dashboard');
+    Route::get('/organization', [App\Http\Controllers\Adviser\OrganizationController::class, 'index'])->name('adviser.organization');
+    Route::get('/students', [App\Http\Controllers\Adviser\StudentController::class, 'index'])->name('adviser.students');
+    Route::get('/evaluation', [App\Http\Controllers\Adviser\EvaluationController::class, 'index'])->name('adviser.evaluation');
+    Route::get('/reports', [App\Http\Controllers\Adviser\ReportsController::class, 'index'])->name('adviser.reports');
+    Route::get('/account', [App\Http\Controllers\Adviser\AccountController::class, 'index'])->name('adviser.account');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Student Routes
+|--------------------------------------------------------------------------
+*/
+Route::prefix('student')->middleware('auth:student')->group(function () {
+    Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
+    Route::get('/organization', [StudentOrganizationController::class, 'index'])->name('student.organization');
+    Route::get('/evaluation', [StudentEvaluationController::class, 'index'])->name('student.evaluation');
 });

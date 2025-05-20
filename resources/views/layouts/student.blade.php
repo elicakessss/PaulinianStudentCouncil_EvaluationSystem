@@ -104,13 +104,13 @@
     <div class="sidebar">
         <div class="profile-section">
             <img src="{{ asset('images/psg-logo.png') }}" alt="Profile" class="profile-img" onerror="this.src='https://via.placeholder.com/80'">
-            <h5 class="mb-1">{{ Auth::guard('admin')->user()->first_name ?? 'Elijah' }} {{ Auth::guard('admin')->user()->last_name ?? 'Alonzo' }}</h5>
-            <p class="text-light mb-0">Administrator</p>
+            <h5 class="mb-1">{{ Auth::guard('student')->user()->first_name ?? 'Student' }} {{ Auth::guard('student')->user()->last_name ?? 'User' }}</h5>
+            <p class="text-light mb-0">Student</p>
         </div>
 
         <ul class="nav flex-column mt-3">
             <li class="nav-item">
-                <a class="nav-link {{ Route::is('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                <a class="nav-link {{ Route::is('student.dashboard') ? 'active' : '' }}" href="{{ route('student.dashboard') }}">
                     <i class="fas fa-tachometer-alt"></i> Dashboard
                 </a>
             </li>
@@ -120,52 +120,14 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ Route::is('admin.organization') ? 'active' : '' }}" href="{{ route('admin.organization') }}">
-                    <i class="fas fa-building"></i> Organization
+                <a class="nav-link {{ Route::is('student.organization') ? 'active' : '' }}" href="{{ route('student.organization') }}">
+                    <i class="fas fa-building"></i> Organizations
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ Route::is('admin.organization.evaluation') ? 'active' : '' }}" href="{{ route('admin.organization.evaluation') }}">
+                <a class="nav-link {{ Route::is('student.evaluation') ? 'active' : '' }}" href="{{ route('student.evaluation') }}">
                     <i class="fas fa-clipboard-check"></i> Evaluation
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <div class="section-header">System Management</div>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{ Route::is('admin.users*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
-                    <i class="fas fa-users"></i> User Management
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{ Route::is('admin.system.organizations*') ? 'active' : '' }}" href="{{ route('admin.system.organizations.index') }}">
-                    <i class="fas fa-sitemap"></i> Organization Management
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{ Route::is('admin.system.reports') ? 'active' : '' }}" href="{{ route('admin.system.reports') }}">
-                    <i class="fas fa-chart-bar"></i> Evaluation Report
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{ Route::is('admin.system.logs') ? 'active' : '' }}" href="{{ route('admin.system.logs') }}">
-                    <i class="fas fa-history"></i> System Logs
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <div class="section-header">Personalization</div>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{ Route::is('admin.account') ? 'active' : '' }}" href="{{ route('admin.account') }}">
-                    <i class="fas fa-user-cog"></i> Account
                 </a>
             </li>
 
@@ -181,22 +143,25 @@
     </div>
 
     <!-- Main content -->
-<div class="main-content">
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
+    <div class="main-content">
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
 
-    @if (session('error'))
-        <div class="alert alert-danger alert-dismissible fade show">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
 
-    @yield('content')
-</div>
+        @yield('content')
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

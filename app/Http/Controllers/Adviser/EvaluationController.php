@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Adviser;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class AccountController extends Controller
+class EvaluationController extends Controller
 {
     public function index()
     {
-        return view('adviser.account.index');
+        return view('adviser.evaluation.index');
     }
+
+
+
 }
