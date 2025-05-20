@@ -88,6 +88,17 @@ Route::prefix('adviser')->middleware('auth:adviser')->group(function () {
     Route::get('/account', [App\Http\Controllers\Adviser\AccountController::class, 'index'])->name('adviser.account');
 });
 
+
+// Inside the adviser prefix group
+Route::prefix('students')->group(function () {
+    Route::get('/', [App\Http\Controllers\Adviser\StudentController::class, 'index'])->name('adviser.students');
+    Route::get('/create', [App\Http\Controllers\Adviser\StudentController::class, 'create'])->name('adviser.students.create');
+    Route::post('/', [App\Http\Controllers\Adviser\StudentController::class, 'store'])->name('adviser.students.store');
+    Route::get('/{id}/edit', [App\Http\Controllers\Adviser\StudentController::class, 'edit'])->name('adviser.students.edit');
+    Route::put('/{id}', [App\Http\Controllers\Adviser\StudentController::class, 'update'])->name('adviser.students.update');
+    Route::delete('/{id}', [App\Http\Controllers\Adviser\StudentController::class, 'destroy'])->name('adviser.students.destroy');
+});
+
 /*
 |--------------------------------------------------------------------------
 | Student Routes
