@@ -22,6 +22,7 @@ use App\Http\Controllers\Adviser\AccountController as AdviserAccountController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Student\OrganizationController as StudentOrganizationController;
 use App\Http\Controllers\Student\EvaluationController as StudentEvaluationController;
+use App\Http\Controllers\Student\AccountController as StudentAccountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,8 +71,12 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
         Route::get('/logs', fn() => view('admin.system.logs.index'))->name('admin.system.logs');
     });
 
-    // Account
-    Route::get('/account', fn() => view('admin.account.index'))->name('admin.account');
+    // Account Management
+    Route::get('/account', [AdminAccountController::class, 'index'])->name('admin.account');
+    Route::get('/account/edit', [AdminAccountController::class, 'edit'])->name('admin.account.edit');
+    Route::put('/account/update', [AdminAccountController::class, 'update'])->name('admin.account.update');
+    Route::put('/account/update-password', [AdminAccountController::class, 'updatePassword'])->name('admin.account.update-password');
+    Route::post('/account/update-profile-picture', [AdminAccountController::class, 'updateProfilePicture'])->name('admin.account.update-profile-picture');
 });
 
 /*
@@ -79,24 +84,35 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
 | Adviser Routes
 |--------------------------------------------------------------------------
 */
-Route::prefix('adviser')->middleware('auth:adviser')->group(function () {
-    Route::get('/dashboard', [App\Http\Controllers\Adviser\DashboardController::class, 'index'])->name('adviser.dashboard');
-    Route::get('/organization', [App\Http\Controllers\Adviser\OrganizationController::class, 'index'])->name('adviser.organization');
-    Route::get('/students', [App\Http\Controllers\Adviser\StudentController::class, 'index'])->name('adviser.students');
-    Route::get('/evaluation', [App\Http\Controllers\Adviser\EvaluationController::class, 'index'])->name('adviser.evaluation');
-    Route::get('/reports', [App\Http\Controllers\Adviser\ReportsController::class, 'index'])->name('adviser.reports');
-    Route::get('/account', [App\Http\Controllers\Adviser\AccountController::class, 'index'])->name('adviser.account');
-});
+Route::prefix('adviser')->middleware(['auth:adviser'])->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [AdviserDashboardController::class, 'index'])->name('adviser.dashboard');
 
+    // Organization Management
+    Route::get('/organization', [AdviserOrganizationController::class, 'index'])->name('adviser.organization');
 
-// Inside the adviser prefix group
-Route::prefix('students')->group(function () {
-    Route::get('/', [App\Http\Controllers\Adviser\StudentController::class, 'index'])->name('adviser.students');
-    Route::get('/create', [App\Http\Controllers\Adviser\StudentController::class, 'create'])->name('adviser.students.create');
-    Route::post('/', [App\Http\Controllers\Adviser\StudentController::class, 'store'])->name('adviser.students.store');
-    Route::get('/{id}/edit', [App\Http\Controllers\Adviser\StudentController::class, 'edit'])->name('adviser.students.edit');
-    Route::put('/{id}', [App\Http\Controllers\Adviser\StudentController::class, 'update'])->name('adviser.students.update');
-    Route::delete('/{id}', [App\Http\Controllers\Adviser\StudentController::class, 'destroy'])->name('adviser.students.destroy');
+    // Evaluation Management
+    Route::get('/evaluation', [AdviserEvaluationController::class, 'index'])->name('adviser.evaluation');
+
+    // Reports
+    Route::get('/reports', [AdviserReportsController::class, 'index'])->name('adviser.reports');
+
+    // Student Management
+    Route::prefix('students')->group(function () {
+        Route::get('/', [AdviserStudentController::class, 'index'])->name('adviser.students');
+        Route::get('/create', [AdviserStudentController::class, 'create'])->name('adviser.students.create');
+        Route::post('/', [AdviserStudentController::class, 'store'])->name('adviser.students.store');
+        Route::get('/{id}/edit', [AdviserStudentController::class, 'edit'])->name('adviser.students.edit');
+        Route::put('/{id}', [AdviserStudentController::class, 'update'])->name('adviser.students.update');
+        Route::delete('/{id}', [AdviserStudentController::class, 'destroy'])->name('adviser.students.destroy');
+    });
+
+    // Account Management
+    Route::get('/account', [AdviserAccountController::class, 'index'])->name('adviser.account');
+    Route::get('/account/edit', [AdviserAccountController::class, 'edit'])->name('adviser.account.edit');
+    Route::put('/account/update', [AdviserAccountController::class, 'update'])->name('adviser.account.update');
+    Route::put('/account/update-password', [AdviserAccountController::class, 'updatePassword'])->name('adviser.account.update-password');
+    Route::post('/account/update-profile-picture', [AdviserAccountController::class, 'updateProfilePicture'])->name('adviser.account.update-profile-picture');
 });
 
 /*
@@ -104,8 +120,20 @@ Route::prefix('students')->group(function () {
 | Student Routes
 |--------------------------------------------------------------------------
 */
-Route::prefix('student')->middleware('auth:student')->group(function () {
+Route::prefix('student')->middleware(['auth:student'])->group(function () {
+    // Dashboard
     Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
+
+    // Organization Management
     Route::get('/organization', [StudentOrganizationController::class, 'index'])->name('student.organization');
+
+    // Evaluation
     Route::get('/evaluation', [StudentEvaluationController::class, 'index'])->name('student.evaluation');
+
+    // Account Management
+    Route::get('/account', [StudentAccountController::class, 'index'])->name('student.account');
+    Route::get('/account/edit', [StudentAccountController::class, 'edit'])->name('student.account.edit');
+    Route::put('/account/update', [StudentAccountController::class, 'update'])->name('student.account.update');
+    Route::put('/account/update-password', [StudentAccountController::class, 'updatePassword'])->name('student.account.update-password');
+    Route::post('/account/update-profile-picture', [StudentAccountController::class, 'updateProfilePicture'])->name('student.account.update-profile-picture');
 });

@@ -28,6 +28,7 @@
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
+                            <th style="width: 60px;">&nbsp;</th>
                             <th>Name</th>
                             <th>ID Number</th>
                             <th>Email</th>
@@ -37,6 +38,15 @@
                     <tbody>
                         @forelse($students as $student)
                             <tr>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        @if($student->profile_picture)
+                                            <img src="{{ asset('storage/' . $student->profile_picture) }}" alt="Profile Picture" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                        @else
+                                            <img src="{{ asset('images/default-profile.png') }}" alt="Default Profile Picture" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                        @endif
+                                    </div>
+                                </td>
                                 <td>{{ $student->first_name }} {{ $student->last_name }}</td>
                                 <td>{{ $student->id_number }}</td>
                                 <td>{{ $student->email }}</td>
@@ -55,7 +65,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center">No students found in your department.</td>
+                                <td colspan="5" class="text-center">No students found in your department.</td>
                             </tr>
                         @endforelse
                     </tbody>

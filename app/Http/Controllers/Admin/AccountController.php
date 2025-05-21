@@ -3,126 +3,95 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Administrator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
-use App\Models\Administrator;
 
 class AccountController extends Controller
 {
+    /**
+     * Display the account management page
+     */
     public function index()
     {
-        $user = auth()->guard('admin')->user();
-
+        $user = Auth::guard('admin')->user();
         return view('admin.account.index', compact('user'));
     }
 
+    /**
+     * Show the form for editing account
+     */
+    public function edit()
+    {
+        $user = Auth::guard('admin')->user();
+        return view('admin.account.edit', compact('user'));
+    }
+
+    /**
+     * Update the admin's profile information
+     */
     public function update(Request $request)
     {
-        $user = auth()->guard('admin')->user();
+        $user = Auth::guard('admin')->user();
 
-        $this->validate($request, [
+        $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => [
-                'required',
-                'email',
-                'max:255',
-                Rule::unique('administrators')->ignore($user->id),
-            ],
-            'id_number' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('administrators')->ignore($user->id),
-            ],
             'description' => 'nullable|string',
         ]);
 
-        try {
-            $user->first_name = $request->first_name;
-            $user->last_name = $request->last_name;
-            $user->email = $request->email;
-            $user->id_number = $request->id_number;
-            $user->description = $request->description;
-            $user->save();
+        $user->update($validated);
 
-            activity()
-                ->causedBy($user)
-                ->performedOn($user)
-                ->log('Updated account profile');
-
-            return redirect()
-                ->route('admin.account')
-                ->with('success', 'Account updated successfully');
-        } catch (\Exception $e) {
-            return back()
-                ->withInput()
-                ->with('error', 'Failed to update account: ' . $e->getMessage());
-        }
+        return redirect()->route('admin.account')->with('success', 'Account updated successfully');
     }
 
+    /**
+     * Update the admin's password
+     */
     public function updatePassword(Request $request)
     {
-        $user = auth()->guard('admin')->user();
+        $user = Auth::guard('admin')->user();
 
-        $this->validate($request, [
-            'current_password' => 'required',
-            'password' => 'required|string|min:6|confirmed',
+        $validated = $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:6|max:6|confirmed|regex:/^[0-9]+$/',
         ]);
 
-        if (!Hash::check($request->current_password, $user->password)) {
-            return back()->with('error', 'Current password is incorrect');
+        // Check if current password matches
+        if (!Hash::check($validated['current_password'], $user->password)) {
+            return redirect()->back()->withErrors(['current_password' => 'The provided password does not match your current password.']);
         }
 
-        try {
-            $user->password = Hash::make($request->password);
-            $user->save();
+        $user->password = Hash::make($validated['new_password']);
+        $user->save();
 
-            activity()
-                ->causedBy($user)
-                ->performedOn($user)
-                ->log('Changed account password');
-
-            return redirect()
-                ->route('admin.account')
-                ->with('success', 'Password updated successfully');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Failed to update password: ' . $e->getMessage());
-        }
+        return redirect()->route('admin.account')->with('success', 'Password updated successfully');
     }
 
+    /**
+     * Update the admin's profile picture
+     */
     public function updateProfilePicture(Request $request)
     {
-        $user = auth()->guard('admin')->user();
+        $user = Auth::guard('admin')->user();
 
-        $this->validate($request, [
-            'profile_picture' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        $validated = $request->validate([
+            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        try {
-            // Delete old profile picture if it exists
-            if ($user->profile_picture) {
-                Storage::disk('public')->delete($user->profile_picture);
-            }
-
-            // Store the new profile picture
-            $path = $request->file('profile_picture')->store('profile_pictures', 'public');
-
-            $user->profile_picture = $path;
-            $user->save();
-
-            activity()
-                ->causedBy($user)
-                ->performedOn($user)
-                ->log('Updated profile picture');
-
-            return redirect()
-                ->route('admin.account')
-                ->with('success', 'Profile picture updated successfully');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Failed to update profile picture: ' . $e->getMessage());
+        // Delete old profile picture if exists
+        if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
+            Storage::disk('public')->delete($user->profile_picture);
         }
+
+        // Store the new profile picture
+        $path = $request->file('profile_picture')->store('profile-pictures', 'public');
+        $user->profile_picture = $path;
+        $user->save();
+
+        return redirect()->route('admin.account')->with('success', 'Profile picture updated successfully');
     }
 }

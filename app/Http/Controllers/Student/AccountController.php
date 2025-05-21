@@ -3,52 +3,49 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\AccountManagement;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class AccountController extends Controller
 {
-    use AccountManagement;
-
     /**
-     * Show the student account page
+     * Display the account management page
      */
     public function index()
     {
-        $student = Auth::guard('student')->user();
-        $profilePictureUrl = $this->getProfilePictureUrl($student->profile_picture);
-
-        return view('student.account.index', compact('student', 'profilePictureUrl'));
+        $user = Auth::guard('student')->user();
+        return view('student.account.index', compact('user'));
     }
 
     /**
-     * Update the student's account information
+     * Show the form for editing account
+     */
+    public function edit()
+    {
+        $user = Auth::guard('student')->user();
+        return view('student.account.edit', compact('user'));
+    }
+
+    /**
+     * Update the student's profile information
      */
     public function update(Request $request)
     {
-        $student = Auth::guard('student')->user();
+        $user = Auth::guard('student')->user();
 
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $student->first_name = $validated['first_name'];
-        $student->last_name = $validated['last_name'];
-        $student->description = $validated['description'];
+        $user->update($validated);
 
-        // Handle profile picture upload
-        if ($request->hasFile('profile_picture')) {
-            $student->profile_picture = $this->handleProfilePicture($request, $student);
-        }
-
-        $student->save();
-
-        return redirect()->route('student.account')->with('success', 'Account information updated successfully.');
+        return redirect()->route('student.account')->with('success', 'Account updated successfully');
     }
 
     /**
@@ -56,18 +53,45 @@ class AccountController extends Controller
      */
     public function updatePassword(Request $request)
     {
-        $student = Auth::guard('student')->user();
+        $user = Auth::guard('student')->user();
 
-        $this->validatePasswordUpdate($request);
+        $validated = $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:6|max:6|confirmed|regex:/^[0-9]+$/',
+        ]);
 
         // Check if current password matches
-        if (!$this->checkCurrentPassword($student, $request->current_password)) {
-            return redirect()->back()->withErrors(['current_password' => 'The current password is incorrect.']);
+        if (!Hash::check($validated['current_password'], $user->password)) {
+            return redirect()->back()->withErrors(['current_password' => 'The provided password does not match your current password.']);
         }
 
-        $student->password = Hash::make($request->password);
-        $student->save();
+        $user->password = Hash::make($validated['new_password']);
+        $user->save();
 
-        return redirect()->route('student.account')->with('success', 'Password updated successfully.');
+        return redirect()->route('student.account')->with('success', 'Password updated successfully');
+    }
+
+    /**
+     * Update the student's profile picture
+     */
+    public function updateProfilePicture(Request $request)
+    {
+        $user = Auth::guard('student')->user();
+
+        $validated = $request->validate([
+            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Delete old profile picture if exists
+        if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
+            Storage::disk('public')->delete($user->profile_picture);
+        }
+
+        // Store the new profile picture
+        $path = $request->file('profile_picture')->store('profile-pictures', 'public');
+        $user->profile_picture = $path;
+        $user->save();
+
+        return redirect()->route('student.account')->with('success', 'Profile picture updated successfully');
     }
 }
