@@ -263,14 +263,14 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ Route::is('student.organization') ? 'active' : '' }}" href="{{ route('student.organization') }}">
+                <a class="nav-link {{ Route::is('student.organization*') ? 'active' : '' }}" href="{{ route('student.organization') }}">
                     <i class="fas fa-building"></i> Organizations
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ Route::is('student.evaluation') ? 'active' : '' }}" href="{{ route('student.evaluation') }}">
-                    <i class="fas fa-clipboard-check"></i> Evaluation
+                <a class="nav-link {{ Route::is('student.evaluation*') ? 'active' : '' }}" href="{{ route('student.evaluation') }}">
+                    <i class="fas fa-clipboard-check"></i> Evaluations
                 </a>
             </li>
 
@@ -279,7 +279,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ Route::is('student.account') ? 'active' : '' }}" href="{{ route('student.account') }}">
+                <a class="nav-link {{ Route::is('student.account*') ? 'active' : '' }}" href="{{ route('student.account') }}">
                     <i class="fas fa-user-cog"></i> Account
                 </a>
             </li>
@@ -343,7 +343,7 @@
         @if (session('error'))
             <div class="alert alert-danger alert-dismissible fade show">
                 {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <button type="button" btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
 

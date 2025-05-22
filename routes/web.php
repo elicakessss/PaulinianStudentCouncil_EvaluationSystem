@@ -63,6 +63,8 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
             Route::get('/{id}/edit', [UserManagementController::class, 'edit'])->name('admin.users.edit');
             Route::put('/{id}', [UserManagementController::class, 'update'])->name('admin.users.update');
             Route::delete('/{id}', [UserManagementController::class, 'destroy'])->name('admin.users.destroy');
+            Route::get('/{id}/reassign', [UserManagementController::class, 'showReassignment'])->name('admin.users.reassign');
+            Route::post('/{id}/reassign', [UserManagementController::class, 'processReassignment'])->name('admin.users.reassign.process');
         });
 
         // Other Pages

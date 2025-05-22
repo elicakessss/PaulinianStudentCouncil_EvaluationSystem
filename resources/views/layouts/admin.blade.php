@@ -263,14 +263,14 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ Route::is('admin.organization') ? 'active' : '' }}" href="{{ route('admin.organization') }}">
-                    <i class="fas fa-building"></i> Organization
+                <a class="nav-link {{ Route::is('admin.organization*') ? 'active' : '' }}" href="{{ route('admin.organization') }}">
+                    <i class="fas fa-sitemap"></i> Organizations
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link {{ Route::is('admin.organization.evaluation') ? 'active' : '' }}" href="{{ route('admin.organization.evaluation') }}">
-                    <i class="fas fa-clipboard-check"></i> Evaluation
+                    <i class="fas fa-clipboard-check"></i> Evaluations
                 </a>
             </li>
 
@@ -286,13 +286,13 @@
 
             <li class="nav-item">
                 <a class="nav-link {{ Route::is('admin.system.organizations*') ? 'active' : '' }}" href="{{ route('admin.system.organizations.index') }}">
-                    <i class="fas fa-sitemap"></i> Organization Management
+                    <i class="fas fa-building"></i> Organization Management
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link {{ Route::is('admin.system.reports') ? 'active' : '' }}" href="{{ route('admin.system.reports') }}">
-                    <i class="fas fa-chart-bar"></i> Evaluation Report
+                    <i class="fas fa-chart-bar"></i> Evaluation Reports
                 </a>
             </li>
 
@@ -307,7 +307,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ Route::is('admin.account') ? 'active' : '' }}" href="{{ route('admin.account') }}">
+                <a class="nav-link {{ Route::is('admin.account*') ? 'active' : '' }}" href="{{ route('admin.account') }}">
                     <i class="fas fa-user-cog"></i> Account
                 </a>
             </li>

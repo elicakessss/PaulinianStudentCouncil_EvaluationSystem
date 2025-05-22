@@ -263,26 +263,20 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ Route::is('adviser.organization') ? 'active' : '' }}" href="{{ route('adviser.organization') }}">
-                    <i class="fas fa-building"></i> Organization
+                <a class="nav-link {{ Route::is('adviser.organization*') ? 'active' : '' }}" href="{{ route('adviser.organization') }}">
+                    <i class="fas fa-building"></i> Organizations
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ Route::is('adviser.students') ? 'active' : '' }}" href="{{ route('adviser.students') }}">
+                <a class="nav-link {{ Route::is('adviser.evaluation*') ? 'active' : '' }}" href="{{ route('adviser.evaluation') }}">
+                    <i class="fas fa-clipboard-check"></i> Evaluations
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ Route::is('adviser.students*') ? 'active' : '' }}" href="{{ route('adviser.students') }}">
                     <i class="fas fa-user-graduate"></i> Students
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{ Route::is('adviser.evaluation') ? 'active' : '' }}" href="{{ route('adviser.evaluation') }}">
-                    <i class="fas fa-clipboard-check"></i> Evaluation
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{ Route::is('adviser.reports') ? 'active' : '' }}" href="{{ route('adviser.reports') }}">
-                    <i class="fas fa-chart-bar"></i> Evaluation Report
                 </a>
             </li>
 
@@ -291,7 +285,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ Route::is('adviser.account') ? 'active' : '' }}" href="{{ route('adviser.account') }}">
+                <a class="nav-link {{ Route::is('adviser.account*') ? 'active' : '' }}" href="{{ route('adviser.account') }}">
                     <i class="fas fa-user-cog"></i> Account
                 </a>
             </li>

@@ -8,8 +8,10 @@ use App\Models\Administrator;
 use App\Models\Adviser;
 use App\Models\Student;
 use App\Models\Department;
+use App\Models\Council;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class UserManagementController extends Controller
 {
@@ -232,6 +234,57 @@ class UserManagementController extends Controller
             ->with('success', ucfirst($role) . ' updated successfully');
     }
 
+    /**
+     * Show the reassignment page for adviser with councils
+     */
+    public function showReassignment($id)
+    {
+        $adviser = Adviser::with(['councils', 'department'])->findOrFail($id);
+
+        // Get all other advisers (excluding the one being deleted)
+        $availableAdvisers = Adviser::where('id', '!=', $id)
+            ->with('department')
+            ->get();
+
+        return view('admin.users.reassign', compact('adviser', 'availableAdvisers'));
+    }
+
+    /**
+     * Process the reassignment and then delete the adviser
+     */
+    public function processReassignment($id, Request $request)
+    {
+        $request->validate([
+            'reassignments' => 'required|array',
+            'reassignments.*' => 'required|exists:advisers,id'
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $adviser = Adviser::with('councils')->findOrFail($id);
+
+            // Reassign each council to the selected adviser
+            foreach ($request->reassignments as $councilId => $newAdviserId) {
+                Council::where('id', $councilId)
+                    ->update(['adviser_id' => $newAdviserId]);
+            }
+
+            // Now delete the adviser
+            $adviser->delete();
+
+            DB::commit();
+
+            return redirect()->route('admin.users.index', ['role' => 'adviser'])
+                ->with('success', 'Adviser deleted successfully and councils have been reassigned.');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()
+                ->withErrors(['error' => 'An error occurred during reassignment. Please try again.']);
+        }
+    }
+
     public function destroy($id, Request $request)
     {
         $role = $request->query('role', 'student');
@@ -239,16 +292,25 @@ class UserManagementController extends Controller
         switch ($role) {
             case 'admin':
                 $user = Administrator::findOrFail($id);
+                $user->delete();
                 break;
             case 'adviser':
-                $user = Adviser::findOrFail($id);
+                $adviser = Adviser::with('councils')->findOrFail($id);
+
+                // Check if adviser has any councils
+                if ($adviser->councils->count() > 0) {
+                    return redirect()->route('admin.users.reassign', $id)
+                        ->with('info', 'This adviser has ' . $adviser->councils->count() . ' council(s) assigned. Please reassign them before deletion.');
+                }
+
+                // If no councils, proceed with deletion
+                $adviser->delete();
                 break;
             default:
                 $user = Student::findOrFail($id);
+                $user->delete();
                 break;
         }
-
-        $user->delete();
 
         return redirect()->route('admin.users.index', ['role' => $role])
             ->with('success', ucfirst($role) . ' deleted successfully');
