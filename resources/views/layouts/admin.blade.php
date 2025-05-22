@@ -251,110 +251,76 @@
             <h5>PSG Evaluation System</h5>
         </div>
 
-        <ul class="nav flex-column mt-2">
-            <li class="nav-item">
-                <a class="nav-link {{ Route::is('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                </a>
-            </li>
+<ul class="nav flex-column mt-2">
+    <li class="nav-item">
+        <a class="nav-link {{ Route::is('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+    </li>
 
-            <li class="nav-item">
-                <div class="section-header">My Organization</div>
-            </li>
+    <li class="nav-item">
+        <div class="section-header">My Organization</div>
+    </li>
 
-            <li class="nav-item">
-                <a class="nav-link {{ Route::is('admin.organization*') ? 'active' : '' }}" href="{{ route('admin.organization') }}">
-                    <i class="fas fa-sitemap"></i> Organizations
-                </a>
-            </li>
+    <li class="nav-item">
+        <a class="nav-link {{ Route::is('admin.my_organization.organization_management*') ? 'active' : '' }}" href="{{ route('admin.my_organization.organization_management.index') }}">
+            <i class="fas fa-sitemap"></i> Organizations
+        </a>
+    </li>
 
-            <li class="nav-item">
-                <a class="nav-link {{ Route::is('admin.organization.evaluation') ? 'active' : '' }}" href="{{ route('admin.organization.evaluation') }}">
-                    <i class="fas fa-clipboard-check"></i> Evaluations
-                </a>
-            </li>
+    <li class="nav-item">
+        <a class="nav-link {{ Route::is('admin.my_organization.evaluation*') ? 'active' : '' }}" href="{{ route('admin.my_organization.evaluation.index') }}">
+            <i class="fas fa-clipboard-check"></i> Evaluations
+        </a>
+    </li>
 
-            <li class="nav-item">
-                <div class="section-header">System Management</div>
-            </li>
+    <li class="nav-item">
+        <div class="section-header">System Management</div>
+    </li>
 
-            <li class="nav-item">
-                <a class="nav-link {{ Route::is('admin.users*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
-                    <i class="fas fa-users"></i> User Management
-                </a>
-            </li>
+    <li class="nav-item">
+        <a class="nav-link {{ Route::is('admin.system_management.user_management*') ? 'active' : '' }}" href="{{ route('admin.system_management.user_management.index') }}">
+            <i class="fas fa-users"></i> User Management
+        </a>
+    </li>
 
-            <li class="nav-item">
-                <a class="nav-link {{ Route::is('admin.system.organizations*') ? 'active' : '' }}" href="{{ route('admin.system.organizations.index') }}">
-                    <i class="fas fa-building"></i> Organization Management
-                </a>
-            </li>
+    <li class="nav-item">
+        <a class="nav-link {{ Route::is('admin.system_management.organizations*') ? 'active' : '' }}" href="{{ route('admin.system_management.organizations.index') }}">
+            <i class="fas fa-building"></i> Organization Management
+        </a>
+    </li>
 
-            <li class="nav-item">
-                <a class="nav-link {{ Route::is('admin.system.reports') ? 'active' : '' }}" href="{{ route('admin.system.reports') }}">
-                    <i class="fas fa-chart-bar"></i> Evaluation Reports
-                </a>
-            </li>
+    <li class="nav-item">
+        <a class="nav-link {{ Route::is('admin.system_management.evaluation_report*') ? 'active' : '' }}" href="{{ route('admin.system_management.evaluation_report.index') }}">
+            <i class="fas fa-chart-bar"></i> Evaluation Reports
+        </a>
+    </li>
 
-            <li class="nav-item">
-                <a class="nav-link {{ Route::is('admin.system.logs') ? 'active' : '' }}" href="{{ route('admin.system.logs') }}">
-                    <i class="fas fa-history"></i> System Logs
-                </a>
-            </li>
+    <li class="nav-item">
+        <a class="nav-link {{ Route::is('admin.system_management.system_logs*') ? 'active' : '' }}" href="{{ route('admin.system_management.system_logs.index') }}">
+            <i class="fas fa-history"></i> System Logs
+        </a>
+    </li>
 
-            <li class="nav-item">
-                <div class="section-header">Personalization</div>
-            </li>
+    <li class="nav-item">
+        <div class="section-header">Personalization</div>
+    </li>
 
-            <li class="nav-item">
-                <a class="nav-link {{ Route::is('admin.account*') ? 'active' : '' }}" href="{{ route('admin.account') }}">
-                    <i class="fas fa-user-cog"></i> Account
-                </a>
-            </li>
+    <li class="nav-item">
+        <a class="nav-link {{ Route::is('admin.account*') ? 'active' : '' }}" href="{{ route('admin.account') }}">
+            <i class="fas fa-user-cog"></i> Account
+        </a>
+    </li>
 
-            <li class="nav-item mt-3">
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="nav-link btn btn-link text-left w-100">
-                        <i class="fas fa-sign-out-alt"></i> Log Out
-                    </button>
-                </form>
-            </li>
-        </ul>
-    </div>
-
-    <!-- Header -->
-    <div class="header">
-        <div class="user-info">
-            <div class="user-name">{{ Auth::guard('admin')->user()->first_name ?? 'Elijah' }} {{ Auth::guard('admin')->user()->last_name ?? 'Alonzo' }}</div>
-            <div class="dropdown">
-                <a href="#" class="dropdown-toggle d-flex align-items-center" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none; color: white;">
-                    @if(Auth::guard('admin')->user()->profile_picture)
-                        <div class="navbar-avatar">
-                            <img src="{{ asset('storage/' . Auth::guard('admin')->user()->profile_picture) }}" alt="Profile Picture" style="width: 32px; height: 32px; object-fit: cover;">
-                        </div>
-                    @else
-                        <div class="navbar-avatar">
-                            {{ substr(Auth::guard('admin')->user()->first_name ?? 'E', 0, 1) }}
-                        </div>
-                    @endif
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                    <li>
-                        <a class="dropdown-item" href="{{ route('admin.account') }}">
-                            <i class="fas fa-user-cog me-2"></i> My Account
-                        </a>
-                    </li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li>
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
-                            <button type="submit" class="dropdown-item">
-                                <i class="fas fa-sign-out-alt me-2"></i> Log Out
-                            </button>
-                        </form>
-                    </li>
-                </ul>
+    <li class="nav-item mt-3">
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="nav-link btn btn-link text-left w-100">
+                <i class="fas fa-sign-out-alt"></i> Log Out
+            </button>
+        </form>
+    </li>
+</ul>
             </div>
         </div>
     </div>

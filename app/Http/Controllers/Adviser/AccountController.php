@@ -45,7 +45,7 @@ class AccountController extends Controller
 
         $user->update($validated);
 
-        return redirect()->route('adviser.account')->with('success', 'Account updated successfully');
+        return redirect()->route('adviser.account.index')->with('success', 'Account updated successfully');
     }
 
     /**
@@ -68,7 +68,7 @@ class AccountController extends Controller
         $user->password = Hash::make($validated['new_password']);
         $user->save();
 
-        return redirect()->route('adviser.account')->with('success', 'Password updated successfully');
+        return redirect()->route('adviser.account.index')->with('success', 'Password updated successfully');
     }
 
     /**
@@ -92,6 +92,6 @@ class AccountController extends Controller
         $user->profile_picture = $path;
         $user->save();
 
-        return redirect()->route('adviser.account')->with('success', 'Profile picture updated successfully');
+        return redirect()->route('adviser.account.index')->with('success', 'Profile picture updated successfully');
     }
 }

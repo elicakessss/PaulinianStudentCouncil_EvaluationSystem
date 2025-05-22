@@ -285,7 +285,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ Route::is('adviser.account*') ? 'active' : '' }}" href="{{ route('adviser.account') }}">
+                <a class="nav-link {{ Route::is('adviser.account*') ? 'active' : '' }}" href="{{ route('adviser.account.index') }}">
                     <i class="fas fa-user-cog"></i> Account
                 </a>
             </li>
@@ -319,7 +319,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                     <li>
-                        <a class="dropdown-item" href="{{ route('adviser.account') }}">
+                        <a class="dropdown-item" href="{{ route('adviser.account.index') }}">
                             <i class="fas fa-user-cog me-2"></i> My Account
                         </a>
                     </li>

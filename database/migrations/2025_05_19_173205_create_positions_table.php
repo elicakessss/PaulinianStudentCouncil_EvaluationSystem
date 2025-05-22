@@ -14,9 +14,13 @@ return new class extends Migration
         Schema::create('positions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('branch');
-            $table->integer('order');
+            $table->text('description')->nullable();
+            $table->string('branch')->nullable(); // Executive, Legislative, Committee, Special
+            $table->integer('level')->default(1); // For ordering/hierarchy
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
+
+            $table->unique('name');
         });
     }
 

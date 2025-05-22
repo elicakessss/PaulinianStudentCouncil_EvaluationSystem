@@ -1,9 +1,0 @@
-@extends('layouts.adviser')
-@section('content')
-<div class="container-fluid">
-    <h1 class="mb-4">Reports Page</h1>
-    <div class="alert alert-success">
-        Successfully navigated to Reports page
-    </div>
-</div>
-@endsection

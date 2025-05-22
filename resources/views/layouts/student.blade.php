@@ -279,7 +279,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ Route::is('student.account*') ? 'active' : '' }}" href="{{ route('student.account') }}">
+                <a class="nav-link {{ Route::is('student.account*') ? 'active' : '' }}" href="{{ route('student.account.index') }}">
                     <i class="fas fa-user-cog"></i> Account
                 </a>
             </li>
@@ -313,7 +313,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                     <li>
-                        <a class="dropdown-item" href="{{ route('student.account') }}">
+                        <a class="dropdown-item" href="{{ route('student.account.index') }}">
                             <i class="fas fa-user-cog me-2"></i> My Account
                         </a>
                     </li>
@@ -343,7 +343,7 @@
         @if (session('error'))
             <div class="alert alert-danger alert-dismissible fade show">
                 {{ session('error') }}
-                <button type="button" btn-close" data-bs-dismiss="alert"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
 
